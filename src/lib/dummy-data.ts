@@ -1,8 +1,10 @@
 import Entrance from "./models/entrance";
+import { WheelchairSpace } from "./models/space";
 import Steps from "./models/steps";
 import Vehicle from "./models/vehicle";
+import Platform from "./models/platform";
 
-export default [
+export const vehicles = [
   new Vehicle({
     name: "NET 2012",
     width: 2.65,
@@ -20,32 +22,47 @@ export default [
       new Entrance({
         width: 1.3,
         height: 2.1,
-        distanceFront: 3,
+        distanceFront: 8,
         side: "right",
-        boardingHeight: 0.34
+        boardingHeight: 0.24
       }),
       new Entrance({
         width: 1.3,
         height: 2.1,
-        distanceFront: 4,
+        distanceFront: 14,
         side: "left",
         boardingHeight: 0.34
       }),
       new Entrance({
         width: 1.3,
         height: 2.1,
-        distanceFront: 5,
+        distanceFront: 14,
         side: "right",
         boardingHeight: 0.34
       }),
       new Entrance({
         width: 1.3,
         height: 2.1,
-        distanceFront: 6,
+        distanceFront: 20,
+        side: "right",
+        boardingHeight: 0.34
+      }),
+      new Entrance({
+        width: 1.3,
+        height: 2.1,
+        distanceFront: 26,
         side: "left",
         boardingHeight: 0.34
       }),
     ],
+    spaces: [
+      new WheelchairSpace({
+        distanceFront: 10,
+      }),
+      new WheelchairSpace({
+        distanceFront: 20,
+      }),
+    ]
   }),
   new Vehicle({
     name: "GT6-70D/N",
@@ -60,5 +77,17 @@ export default [
     length: 39.68,
     height: 3.48,
     entrances: [],
+  }),
+];
+
+
+export const platforms = [
+  new Platform({
+    name: 'Industriemuseum',
+    boardingHeight: 0.2,
+  }),
+  new Platform({
+    name: 'TU Campus',
+    boardingHeight: 0.2,
   }),
 ];

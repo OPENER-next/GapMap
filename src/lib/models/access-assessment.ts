@@ -1,0 +1,1 @@
+export enum AccessAssessment {accessible, aided, inaccessible}

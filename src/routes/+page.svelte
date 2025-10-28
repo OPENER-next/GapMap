@@ -3,5 +3,5 @@
   import MapPane from "../views/MapPane.svelte";
 </script>
 
-<SidePane class="basis-md overflow-scroll"/>
-<MapPane class="flex-1 m-[1rem] rounded-3xl map-pane"/>
+<SidePane class="max-w-md flex-1"/>
+<MapPane class="flex-2 m-[1.5rem] ml-0"/>

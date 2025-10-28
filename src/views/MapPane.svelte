@@ -1,9 +1,9 @@
 <script lang="ts">
   import type { MapMouseEvent } from 'maplibre-gl';
-  import { MapLibre } from 'svelte-maplibre';
+  import { AttributionControl, ControlButton, ControlGroup, MapLibre, ScaleControl, ZoomRange } from 'svelte-maplibre';
   import type { Map, MapGeoJSONFeature } from 'svelte-maplibre';
 
-	const {
+	let {
     class: className,
 	}: {
     class?: string;
@@ -75,14 +75,39 @@
 </script>
 
 
-<MapLibre
-  antialias={true}
-  center={[12.92361,50.82492]}
-  zoom={12}
-  class={className}
-  standardControls="bottom-right"
-  projection={{type: 'globe'}}
-  style="https://api.maptiler.com/maps/019909f4-78cf-7dbe-a949-27df4805bb43/style.json?key=3Uam2soS3S9RCPvHdP7E"
-  onload={initMap}
-  onclick={handleClick}
-/>
+<div class="map-pane rounded-3xl {className}">
+  <MapLibre
+    antialias={true}
+    center={[12.92361,50.82492]}
+    zoom={12}
+    class="w-full h-full"
+    standardControls="bottom-right"
+    attributionControl={false}
+    projection={{type: 'globe'}}
+    style="https://api.maptiler.com/maps/019909f4-78cf-7dbe-a949-27df4805bb43/style.json?key=3Uam2soS3S9RCPvHdP7E"
+    onload={initMap}
+    onclick={handleClick}
+  >
+    <AttributionControl
+      position="bottom-left"
+      compact={true}
+    />
+  </MapLibre>
+</div>
+
+
+<style>
+  .map-pane {
+    position: relative;
+    overflow: hidden;
+
+    &::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      box-shadow: inset 0 0 6px rgba(0,0,0,0.25);
+      pointer-events: none;
+      border-radius: inherit;
+    }
+  }
+</style>
