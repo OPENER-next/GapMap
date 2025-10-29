@@ -1,5 +1,3 @@
-import { AccessAssessment } from "./access-assessment";
-import type Platform from "./platform";
 import type Steps from "./steps";
 
 export default class Entrance {
@@ -27,19 +25,5 @@ export default class Entrance {
 
   get isStepless(): boolean {
     return !this.steps || this.steps.count === 0;
-  }
-
-  assessAccess(platform: Platform): AccessAssessment {
-    const totalStepHeight = this.steps ? this.steps.count * this.steps.height : 0;
-    const floorHeight = this.boardingHeight + totalStepHeight;
-    const accessHeightDifference = Math.abs(floorHeight - platform.boardingHeight);
-
-    if (this.isStepless && accessHeightDifference <= 0.05) {
-      return AccessAssessment.accessible;
-    }
-    else if (this.ramp && accessHeightDifference <= 0.3) {
-      return AccessAssessment.aided;
-    }
-    return AccessAssessment.inaccessible;
   }
 }

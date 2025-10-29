@@ -1,9 +1,9 @@
 <script lang="ts">
   import type Vehicle from "$lib/models/vehicle";
-  import { AccessAssessment } from "$lib/models/access-assessment";
+  import { AccessAssessment, AccessSynopsis } from "$lib/models/access-assessment";
   import type Platform from "$lib/models/platform";
   import { WheelchairSpace } from "$lib/models/space";
-  import AccessInfoBox from "../lib/AccessInfoBox.svelte";
+  import AccessInfoBox from "./AccessInfoBox.svelte";
   import MaterialSymbolsAccessibleRounded from '~icons/material-symbols/accessible-rounded';
   import MaterialSymbolsCheckRounded from '~icons/material-symbols/check-rounded';
   import MaterialSymbolsRemoveRounded from '~icons/material-symbols/remove-rounded';
@@ -25,19 +25,19 @@
     class?: string;
   } = $props();
 
-  function selectAccessIcon(assessment: AccessAssessment): Component<SVGAttributes<SVGSVGElement>> {
+  function selectAccessIcon(assessment: AccessSynopsis): Component<SVGAttributes<SVGSVGElement>> {
     switch (assessment) {
-      case AccessAssessment.accessible: return MaterialSymbolsCheckRounded;
-      case AccessAssessment.aided: return MaterialSymbolsRemoveRounded;
-      case AccessAssessment.inaccessible: return MaterialSymbolsCloseRounded;
+      case AccessSynopsis.accessible: return MaterialSymbolsCheckRounded;
+      case AccessSynopsis.aided: return MaterialSymbolsRemoveRounded;
+      case AccessSynopsis.inaccessible: return MaterialSymbolsCloseRounded;
     }
   }
 
-  function selectAccessClass(assessment: AccessAssessment): string {
+  function selectAccessClass(assessment: AccessSynopsis): string {
     switch (assessment) {
-      case AccessAssessment.accessible: return 'good';
-      case AccessAssessment.aided: return 'limited';
-      case AccessAssessment.inaccessible: return 'bad';
+      case AccessSynopsis.accessible: return 'good';
+      case AccessSynopsis.aided: return 'limited';
+      case AccessSynopsis.inaccessible: return 'bad';
     }
   }
 
@@ -55,7 +55,7 @@
   <div class="schematic-wrapper vehicle">
     {#key vehicle}
     <!--
-      Ideally we would SVG here as we are more or less abusing HTML to draw shapes. However SVG has a problem:
+      Ideally we would use SVG here as we are more or less abusing HTML to draw shapes. However SVG has a problem:
       In order to scale the SVG we need to define the view box, but we don't want to scale the stoke
       so we use vector-effect="non-scaling-stroke". This makes it almost impossible to calculate the view box size
       as the stroke cannot be declared as inset and instead is always on the centerline.
@@ -104,19 +104,18 @@
     {#each vehicle.entrances as entrance}
       {#if entrance.side === 'right'}
         {#key [entrance, platform]}
-          {@const accessAssessment = entrance.assessAccess(platform)}
+          {@const accessAssessment = AccessAssessment.evaluate(entrance, platform)}
           {@const y = entrance.distanceFront + entrance.width/2}
-          {@const IconComponent = selectAccessIcon(accessAssessment)}
+          {@const IconComponent = selectAccessIcon(accessAssessment.synopsis)}
           <div
-            class="access-info-box {selectAccessClass(accessAssessment)}"
+            class="access-info-box {selectAccessClass(accessAssessment.synopsis)}"
             style="top:{conv(y)};"
             in:customScale|global={{ delay: 600, duration: 300, startX: 0.8, opacity: 0 }}
             out:fade|global={{ duration: 300, easing: sineOut }}
           >
             <!--TODO: Screen reader values that depicts this as first door from front-->
             <AccessInfoBox
-              entrance={entrance}
-              platform={platform}
+              assessment={accessAssessment}
             />
             <div class="icon access-icon">
               <IconComponent/>

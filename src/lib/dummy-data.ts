@@ -69,7 +69,38 @@ export const vehicles = [
     width: 2.65,
     length: 29.68,
     height: 3.48,
-    entrances: [],
+    entrances: [
+      new Entrance({
+        width: 1.3,
+        height: 2.1,
+        distanceFront: 5,
+        side: "right",
+        boardingHeight: 0.22,
+      }),
+      new Entrance({
+        width: 1.3,
+        height: 2.1,
+        distanceFront: 15,
+        side: "right",
+        boardingHeight: 0.22,
+        steps: {
+          count: 2,
+          height: 0.12,
+        },
+        ramp: true,
+      }),
+      new Entrance({
+        width: 1.3,
+        height: 2.1,
+        distanceFront: 25,
+        side: "right",
+        boardingHeight: 0.22,
+        steps: {
+          count: 3,
+          height: 0.12,
+        }
+      }),
+    ],
   }),
   new Vehicle({
     name: "GT8-70D/N",
@@ -88,6 +119,6 @@ export const platforms = [
   }),
   new Platform({
     name: 'TU Campus',
-    boardingHeight: 0.2,
+    boardingHeight: 0.22,
   }),
 ];
