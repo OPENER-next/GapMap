@@ -1,7 +1,7 @@
 
 
 export abstract class Space {
-  distanceFront: number;
+  readonly distanceFront: number;
 
   constructor({
     distanceFront

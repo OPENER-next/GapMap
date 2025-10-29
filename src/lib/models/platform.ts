@@ -1,6 +1,6 @@
 export default class Platform {
-  name: string;
-  boardingHeight: number;
+  readonly name: string;
+  readonly boardingHeight: number;
 
   constructor({
     name, boardingHeight

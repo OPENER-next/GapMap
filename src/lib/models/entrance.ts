@@ -3,13 +3,13 @@ import type Platform from "./platform";
 import type Steps from "./steps";
 
 export default class Entrance {
-  width: number;
-  height: number;
-  distanceFront: number;
-  side: string;
-  boardingHeight: number;
-  steps?: Steps;
-  ramp: boolean;
+  readonly width: number;
+  readonly height: number;
+  readonly distanceFront: number;
+  readonly side: string;
+  readonly boardingHeight: number;
+  readonly steps?: Steps;
+  readonly ramp: boolean;
 
   constructor({
     width, height, distanceFront, side, boardingHeight, steps, ramp = false
