@@ -128,3 +128,13 @@ body {
   display: flex;
   align-items: stretch;
 }
+
+@media (max-width: 1000px) {
+  body {
+    justify-content: center;
+  }
+
+  .map-pane {
+    display: none;
+  }
+}
