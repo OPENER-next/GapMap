@@ -18,10 +18,21 @@
   );
 
   let platformSelectValue = $state('');
-  let platform = $derived(isNaN(parseInt(platformSelectValue))
+  let platformIndex = $derived(parseInt(platformSelectValue));
+  let platform = $derived(isNaN(platformIndex)
     ? null
-    : platformData[parseInt(platformSelectValue)]
+    : platformData[platformIndex]
   );
+
+  function nextPlatform() {
+    const index = (platformIndex + 1) % platformData.length;
+    platformSelectValue = index.toString();
+  }
+
+  function previousPlatform() {
+    const index = Math.abs((platformIndex - 1) % platformData.length);
+    platformSelectValue = index.toString();
+  }
 </script>
 
 
@@ -81,6 +92,8 @@
         vehicle={vehicle}
         platform={platform}
         class="flex-1"
+        onNext={nextPlatform}
+        onPrevious={previousPlatform}
       />
     {/if}
   </main>

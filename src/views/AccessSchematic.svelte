@@ -8,9 +8,11 @@
   import MaterialSymbolsCheckRounded from '~icons/material-symbols/check-rounded';
   import MaterialSymbolsRemoveRounded from '~icons/material-symbols/remove-rounded';
   import MaterialSymbolsCloseRounded from '~icons/material-symbols/close-rounded';
+  import MaterialSymbolsArrowWarmUpRounded from '~icons/material-symbols/arrow-warm-up-rounded';
+  import MaterialSymbolsArrowCoolDownRounded from '~icons/material-symbols/arrow-cool-down-rounded';
   import WindshieldImage from '$lib/assets/windshield.svg';
   import { type Component } from "svelte";
-  import type { SVGAttributes } from "svelte/elements";
+  import type { MouseEventHandler, SVGAttributes } from "svelte/elements";
   import { fade, fly } from "svelte/transition";
   import { quartOut, sineOut } from "svelte/easing";
   import { customScale } from "$lib/transitions";
@@ -19,10 +21,14 @@
     vehicle,
     platform,
     class: className,
+    onNext,
+    onPrevious,
 	}: {
     vehicle: Vehicle;
     platform: Platform;
     class?: string;
+    onNext?: MouseEventHandler<HTMLButtonElement>;
+    onPrevious?: MouseEventHandler<HTMLButtonElement>;
   } = $props();
 
   function selectAccessIcon(assessment: AccessSynopsis): Component<SVGAttributes<SVGSVGElement>> {
@@ -52,7 +58,7 @@
 
 
 <div class="flex flex-row {className}">
-  <div class="schematic-wrapper vehicle">
+  <div class="schematic-wrapper vehicle flex-1">
     {#key vehicle}
     <!--
       Ideally we would use SVG here as we are more or less abusing HTML to draw shapes. However SVG has a problem:
@@ -63,7 +69,7 @@
       but then the SVG is larger than its bbox.
     -->
       <div
-        class="schematic"
+        class="schematic my-[3rem]"
         in:fly={{ y: '100vh', duration: 600, opacity: 1, easing: quartOut }}
         out:fade={{ duration: 300 }}
       >
@@ -100,7 +106,7 @@
     {/key}
   </div>
 
-  <div class="schematic flex-[2.5]">
+  <div class="schematic flex-[2.5] my-[3rem]">
     {#each vehicle.entrances as entrance}
       {#if entrance.side === 'right'}
         {#key [entrance, platform]}
@@ -126,28 +132,41 @@
     {/each}
   </div>
 
-  <div class="schematic-wrapper platform">
-    {#key platform}
-      <div
-        class="schematic"
-        in:fly={{ y: '100vh', duration: 600, opacity: 1, easing: quartOut }}
-        out:fade={{ duration: 300 }}
-      >
+  <div class="flex-1">
+    <button
+      class="swap-button h-[2rem] mb-[1rem]"
+      onclick={onNext}
+    >
+      <MaterialSymbolsArrowWarmUpRounded/>
+    </button>
+    <div class="schematic-wrapper platform">
+      {#key platform}
         <div
-          class="body"
-          style="height: {conv(vehicle.length)};"
-        ></div>
-      </div>
+          class="schematic"
+          in:fly={{ y: '100vh', duration: 600, opacity: 1, easing: quartOut }}
+          out:fade={{ duration: 300 }}
+        >
+          <div
+            class="body"
+            style="height: {conv(vehicle.length)};"
+          ></div>
+        </div>
       {/key}
+    </div>
+    <button
+      class="swap-button h-[2rem] mt-[1rem]"
+      onclick={onPrevious}
+    >
+      <MaterialSymbolsArrowCoolDownRounded/>
+    </button>
   </div>
 </div>
 
 
 <style>
   .schematic-wrapper {
-    flex: 1;
     display: grid;
-     overflow: hidden;
+    overflow: hidden;
 
     & > * {
       grid-area: 1 / 1;
@@ -156,7 +175,6 @@
 
   .schematic {
     position: relative;
-    margin: 3rem 0;
   }
 
   .icon {
@@ -260,6 +278,21 @@
       .access-icon {
         background-color: #f80b37;
       }
+    }
+  }
+
+  .swap-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    background-color: lightgray;
+    transition-property: background-color, color;
+    transition-duration: 0.3s;
+
+    &:hover {
+      background-color: gray;
+      color: white;
     }
   }
 </style>
