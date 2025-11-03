@@ -23,6 +23,7 @@ def overpassToGeoJSONBounds(bounds):
 lines = []
 for relation in data['elements']:
   coordinates = []
+  stops = []
   for member in relation['members']:
     if member['type'] == 'way' and member['role'] == "":
       newPoints = member['geometry'];
@@ -36,16 +37,19 @@ for relation in data['elements']:
         newPoints.reverse()
         newPoints.pop(0)
         coordinates.extend(newPoints)
+    elif member['type'] == 'node' and member['role'] == 'stop':
+      stops.append(f'node/{member['ref']}')
 
   bbox = overpassToGeoJSONBounds(relation['bounds']);
 
   feature = Feature(
     id=f'relation/{relation['id']}',
+    bbox=bbox,
     geometry=LineString(overpassToGeoJSONCoords(coordinates)),
     properties={
       **relation['tags'],
       '_id': f'relation/{relation['id']}',
-      '_bbox': bbox,
+      '_stops': stops,
     },
     bbox=bbox
   )

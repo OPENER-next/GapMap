@@ -1,10 +1,9 @@
-import Entrance from "./models/entrance";
-import { WheelchairSpace } from "./models/space";
-import Steps from "./models/steps";
-import Vehicle from "./models/vehicle";
-import Platform from "./models/platform";
+import Entrance from "$lib/models/entrance";
+import { WheelchairSpace } from "$lib/models/space";
+import Steps from "$lib/models/steps";
+import Vehicle from "$lib/models/vehicle";
 
-export const vehicles = [
+export const vehicleData = [
   new Vehicle({
     name: "NET 2012",
     width: 2.65,
@@ -108,17 +107,5 @@ export const vehicles = [
     length: 39.68,
     height: 3.48,
     entrances: [],
-  }),
-];
-
-
-export const platforms = [
-  new Platform({
-    name: 'Industriemuseum',
-    boardingHeight: 0.2,
-  }),
-  new Platform({
-    name: 'TU Campus',
-    boardingHeight: 0.22,
   }),
 ];

@@ -1,5 +1,7 @@
 <script lang="ts">
+  import { LineStore } from '$lib/stores/line-store.svelte';
   import type { MapMouseEvent, Map, MapLibreEvent } from 'maplibre-gl';
+  import { getContext } from 'svelte';
   import { GeolocateControl, GlobeControl, MapLibre, NavigationControl, Projection, ScaleControl } from 'svelte-maplibre-gl';
 
 	let {
@@ -7,6 +9,8 @@
 	}: {
     class?: string;
   } = $props();
+
+  const lineStore = getContext<LineStore>('line-store');
 
   let map: Map | undefined = $state();
 
@@ -24,18 +28,37 @@
     map.on('mouseleave', 'tram-stops', hidePointer);
   }
 
-  function toggleActive(target: MapGeoJSONFeature, map: Map): boolean {
-    const gState = map.getGlobalState();
-    const osmId = target.properties['_id'];
-    if (osmId && gState['active'] != osmId) {
-      map.setGlobalStateProperty('active', osmId);
-      return true;
+  $effect(() => {
+    if (map) {
+      const line = lineStore.selectedLine;
+      // Calculating bounds based on geometry/coordinates doesn't work because the coordinates are clamped to the tile
+      // therefore it is precalculated and added as a property
+      if (line) map.fitBounds(line.bbox, {
+          padding: 100,
+          duration: 1000
+        }
+      );
+      if (map.isStyleLoaded()) {
+        map.setGlobalStateProperty('active', line?.id);
+      }
     }
-    else {
-      map.setGlobalStateProperty('active', null);
-      return false;
+  });
+
+  $effect(() => {
+    if (map) {
+      const stop = lineStore.selectedPlatform;
+      if (stop) map.flyTo({
+        center: stop.coordinates as [number, number],
+        speed: 0.75,
+        duration: 1000,
+        zoom: 19,
+      });
+      if (map.isStyleLoaded()) {
+        map.setGlobalStateProperty('active', stop?.id);
+      }
     }
-  }
+  });
+
 
   function handleClick(e: MapMouseEvent) {
     const targets = e.target.queryRenderedFeatures(e.point, {
@@ -46,13 +69,7 @@
     if (stop) {
       console.log("Clicked stop", stop);
       if (stop.geometry.type == 'Point') {
-        const isActive = toggleActive(stop, e.target);
-        if (isActive) e.target.flyTo({
-          center: stop.geometry.coordinates as [number, number],
-          speed: 0.75,
-          duration: 1000,
-          zoom: 19,
-        });
+        lineStore.selectedPlatformId = stop.properties['_id'];
       }
       return;
     }
@@ -61,15 +78,7 @@
     if (line) {
       console.log("Clicked line", line);
       if (line.geometry.type == 'LineString') {
-        const isActive = toggleActive(line, e.target);
-        // Calculating bounds based on geometry/coordinates doesn't work because the coordinates are clamped to the tile
-        // therefore it is precalculated and added as a property
-        if (isActive) e.target.fitBounds(
-          JSON.parse(line.properties['_bbox']), {
-            padding: 100,
-            duration: 1000
-          }
-        );
+        lineStore.selectedLineId = line.properties['_id'];
       }
       return;
     }

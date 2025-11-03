@@ -135,7 +135,7 @@
   <div class="flex-1">
     <button
       class="swap-button h-[2rem] mb-[1rem]"
-      onclick={onNext}
+      onclick={onPrevious}
     >
       <MaterialSymbolsArrowWarmUpRounded/>
     </button>
@@ -155,7 +155,7 @@
     </div>
     <button
       class="swap-button h-[2rem] mt-[1rem]"
-      onclick={onPrevious}
+      onclick={onNext}
     >
       <MaterialSymbolsArrowCoolDownRounded/>
     </button>

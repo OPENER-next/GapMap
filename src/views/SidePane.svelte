@@ -1,9 +1,10 @@
-
 <script lang="ts">
   import * as Select from "$lib/components/ui/select/index.js";
-  import {vehicles as vehicleData, platforms as platformData} from  "$lib/dummy-data";
+  import { vehicleData } from  "$lib/data/vehicles";
   import logoImage from "$lib/assets/logo.svg";
   import AccessSchematic from "./AccessSchematic.svelte";
+  import { LineStore } from "$lib/stores/line-store.svelte";
+  import { getContext } from "svelte";
 
 	let {
     class: className,
@@ -11,28 +12,13 @@
     class?: string;
   } = $props();
 
+  const lineStore = getContext<LineStore>('line-store');
+
   let vehicleSelectValue = $state('');
   let vehicle = $derived(isNaN(parseInt(vehicleSelectValue))
     ? null
     : vehicleData[parseInt(vehicleSelectValue)]
   );
-
-  let platformSelectValue = $state('');
-  let platformIndex = $derived(parseInt(platformSelectValue));
-  let platform = $derived(isNaN(platformIndex)
-    ? null
-    : platformData[platformIndex]
-  );
-
-  function nextPlatform() {
-    const index = (platformIndex + 1) % platformData.length;
-    platformSelectValue = index.toString();
-  }
-
-  function previousPlatform() {
-    const index = Math.abs((platformIndex - 1) % platformData.length);
-    platformSelectValue = index.toString();
-  }
 </script>
 
 
@@ -42,15 +28,17 @@
       <img alt="" src={logoImage} class="h-[1.3em]">
       <span>GapMap</span>
     </h1>
-    <Select.Root type="single" bind:value={vehicleSelectValue}>
+    <Select.Root type="single" bind:value={lineStore.selectedLineId}>
       <Select.Trigger class="w-full">
-        {#if vehicle}
-          {vehicle.name}
+        {#if lineStore.selectedLine}
+          {lineStore.selectedLine.name}
+        {:else}
+          Linie auswählen
         {/if}
       </Select.Trigger>
       <Select.Content>
-        {#each vehicleData as vehicle, i}
-          <Select.Item value={i.toString()}>{vehicle.name}</Select.Item>
+        {#each lineStore.lines as [id, line]}
+          <Select.Item value={id}>{line.name}</Select.Item>
         {/each}
       </Select.Content>
     </Select.Root>
@@ -71,29 +59,29 @@
           {/each}
         </Select.Content>
       </Select.Root>
-      <Select.Root type="single" bind:value={platformSelectValue}>
+      <Select.Root disabled={!lineStore.selectedLine} type="single" bind:value={lineStore.selectedPlatformId}>
         <Select.Trigger class="w-full">
-          {#if platform}
-            {platform.name}
+          {#if lineStore.selectedPlatform}
+            {lineStore.selectedPlatform.name}
           {:else}
             Haltestelle auswählen
           {/if}
         </Select.Trigger>
         <Select.Content>
-          {#each platformData as platform, i}
-            <Select.Item value={i.toString()}>{platform.name}</Select.Item>
+          {#each lineStore.selectedLine?.stops as platform}
+            <Select.Item value={platform.id}>{platform.name}</Select.Item>
           {/each}
         </Select.Content>
       </Select.Root>
     </div>
 
-    {#if platform && vehicle}
+    {#if lineStore.selectedPlatform && vehicle}
       <AccessSchematic
         vehicle={vehicle}
-        platform={platform}
+        platform={lineStore.selectedPlatform}
         class="flex-1"
-        onNext={nextPlatform}
-        onPrevious={previousPlatform}
+        onNext={_ => lineStore.nextPlatform()}
+        onPrevious={_ => lineStore.previousPlatform()}
       />
     {/if}
   </main>
