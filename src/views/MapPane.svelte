@@ -1,7 +1,6 @@
 <script lang="ts">
-  import type { MapMouseEvent } from 'maplibre-gl';
-  import { AttributionControl, ControlButton, ControlGroup, MapLibre, ScaleControl, ZoomRange } from 'svelte-maplibre';
-  import type { Map, MapGeoJSONFeature } from 'svelte-maplibre';
+  import type { MapMouseEvent, Map, MapLibreEvent } from 'maplibre-gl';
+  import { GeolocateControl, GlobeControl, MapLibre, NavigationControl, Projection, ScaleControl } from 'svelte-maplibre-gl';
 
 	let {
     class: className,
@@ -9,7 +8,10 @@
     class?: string;
   } = $props();
 
-  function initMap(map: Map) {
+  let map: Map | undefined = $state();
+
+  function initMap(loadEvent: MapLibreEvent) {
+    const map = loadEvent.target;
     function showPointer() {
       map.getCanvas().style.setProperty('cursor', 'pointer');
     }
@@ -77,21 +79,18 @@
 
 <div class="map-pane rounded-3xl {className}">
   <MapLibre
-    antialias={true}
-    center={[12.92361,50.82492]}
-    zoom={12}
+    bind:map
     class="w-full h-full"
-    standardControls="bottom-right"
-    attributionControl={false}
-    projection={{type: 'globe'}}
+    zoom={12}
+    center={{ lng: 12.92361, lat: 50.82492 }}
     style="https://api.maptiler.com/maps/019909f4-78cf-7dbe-a949-27df4805bb43/style.json?key=3Uam2soS3S9RCPvHdP7E"
     onload={initMap}
     onclick={handleClick}
   >
-    <AttributionControl
-      position="bottom-left"
-      compact={true}
-    />
+    <Projection type="globe" />
+    <NavigationControl />
+    <ScaleControl />
+    <GeolocateControl />
   </MapLibre>
 </div>
 

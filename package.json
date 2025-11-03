@@ -33,6 +33,6 @@
 	},
 	"dependencies": {
 		"maplibre-gl": "^5.7.0",
-		"svelte-maplibre": "^1.2.1"
+		"svelte-maplibre-gl": "^1.0.2"
 	}
 }
