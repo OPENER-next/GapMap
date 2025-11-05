@@ -224,6 +224,8 @@
   .platform {
     .body {
       background: lightgray;
+      background-image: url('$lib/assets/paving.svg');
+      background-size: 20px;
     }
   }
 
