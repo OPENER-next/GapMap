@@ -34,11 +34,19 @@ export async function generateLineData(): Promise<FeatureCollection<LineString, 
     const coordinates: Array<[number, number]> = [];
     const stops: string[] = [];
 
-    for (const member of relation.members) {
+    for (const [index, member] of relation.members.entries()) {
       if (member.type === 'way' && member.role === '') {
         const newPoints = Array.from(overpassToGeoJSONCoords(member.geometry));
         // Drop overlapping coordinates and swap/align coordinates
         if (coordinates.length === 0) {
+          // The first way (line segment) might be reversed so look ahead and reverse if needed
+          const nextMember = relation.members[index + 1];
+          if (nextMember) {
+            const nextPoints = Array.from(overpassToGeoJSONCoords(nextMember.geometry));
+            if (arrayEquals(newPoints[0], nextPoints[0])) {
+              newPoints.reverse();
+            }
+          }
           coordinates.push(...newPoints);
         }
         else if (arrayEquals(coordinates[coordinates.length - 1], newPoints[0])) {
