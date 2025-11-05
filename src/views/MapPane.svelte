@@ -118,4 +118,13 @@
       border-radius: inherit;
     }
   }
+
+  :global(.map-pane :is(
+    .maplibregl-ctrl-top-right,
+    .maplibregl-ctrl-top-left,
+    .maplibregl-ctrl-bottom-left,
+    .maplibregl-ctrl-bottom-right
+  )) {
+    padding: 0.5rem;
+  }
 </style>
