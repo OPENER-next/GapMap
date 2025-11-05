@@ -34,31 +34,45 @@
       // Calculating bounds based on geometry/coordinates doesn't work because the coordinates are clamped to the tile
       // therefore it is precalculated and added as a property
       if (line) map.fitBounds(line.bbox, {
-          padding: 100,
-          duration: 1000
-        }
-      );
-      if (map.isStyleLoaded()) {
-        map.setGlobalStateProperty('active', line?.id);
-      }
+        padding: 100,
+        duration: 1000
+      });
+      setActiveMapElementId(map, line?.id);
     }
   });
 
   $effect(() => {
     if (map) {
       const stop = lineStore.selectedPlatform;
-      if (stop) map.flyTo({
-        center: stop.coordinates as [number, number],
-        speed: 0.75,
-        duration: 1000,
-        zoom: 19,
-      });
-      if (map.isStyleLoaded()) {
-        map.setGlobalStateProperty('active', stop?.id);
+      const line = lineStore.selectedLine;
+      let activeId;
+      if (stop) {
+        map.flyTo({
+          center: stop.coordinates,
+          speed: 0.75,
+          duration: 1000,
+          zoom: 19,
+        });
+        activeId = stop.id;
       }
+      else if (line) {
+        map.fitBounds(line.bbox, {
+          padding: 100,
+          duration: 1000
+        });
+        activeId = line.id;
+      }
+      setActiveMapElementId(map, activeId);
     }
   });
 
+
+  function setActiveMapElementId(map: Map, id?: string | undefined) {
+    if (map.isStyleLoaded()) {
+      // null is used to unset the id
+      map.setGlobalStateProperty('active', id ?? null);
+    }
+  }
 
   function handleClick(e: MapMouseEvent) {
     const targets = e.target.queryRenderedFeatures(e.point, {

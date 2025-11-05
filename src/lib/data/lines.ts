@@ -10,7 +10,7 @@ import rawLineData from "virtual:osm-gen/lines";
  */
 export const lineData = new Map(rawLineData.features.map((e) => {
   return [
-    e.id,
+    e.id as string,
     new Line({
       id: e.id as string,
       bbox: e.bbox as [number, number, number, number],

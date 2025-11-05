@@ -3,7 +3,21 @@ import { lineData } from "$lib/data/lines";
 export class LineStore {
 	lines = lineData;
 
-	selectedLineId?: string = $state();
+	#selectedLineId?: string = $state();
+
+	get selectedLineId() {
+		return this.#selectedLineId;
+	}
+
+	set selectedLineId(value: string | undefined) {
+		this.#selectedLineId = value;
+		const line = value !== undefined ? lineData.get(value) : undefined;
+		// unset selected stop if it is not part of the new line
+		if (this.selectedPlatformId && !line?.stops.some(p => p.id === this.selectedPlatformId)) {
+			this.selectedPlatformId = undefined;
+		}
+	}
+
 	readonly selectedLine = $derived.by(() => {
 		if (this.selectedLineId !== undefined) {
 			return lineData.get(this.selectedLineId);
@@ -16,6 +30,15 @@ export class LineStore {
 			return this.selectedLine?.stops.find(p => p.id === this.selectedPlatformId);
 		}
 	});
+
+
+	get isLineSelected() {
+		return this.#selectedLineId !== undefined;
+	}
+
+	get isPlatformSelected() {
+		return this.selectedPlatformId !== undefined;
+	}
 
 	nextPlatform() {
 		if (this.selectedLine) {

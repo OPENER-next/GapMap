@@ -28,7 +28,14 @@
       <img alt="" src={logoImage} class="h-[1.3em]">
       <span>GapMap</span>
     </h1>
-    <Select.Root type="single" bind:value={lineStore.selectedLineId}>
+    <Select.Root
+      allowDeselect={true}
+      type="single"
+      bind:value={
+        () => lineStore.selectedLineId,
+        (v) => lineStore.selectedLineId = v === '' ? undefined : v
+      }
+    >
       <Select.Trigger class="w-full">
         {#if lineStore.selectedLine}
           {lineStore.selectedLine.name}
@@ -59,7 +66,15 @@
           {/each}
         </Select.Content>
       </Select.Root>
-      <Select.Root disabled={!lineStore.selectedLine} type="single" bind:value={lineStore.selectedPlatformId}>
+      <Select.Root
+        allowDeselect={true}
+        disabled={!lineStore.isLineSelected}
+        type="single"
+        bind:value={
+          () => lineStore.selectedPlatformId,
+          (v) => lineStore.selectedPlatformId = v === '' ? undefined : v
+        }
+      >
         <Select.Trigger class="w-full">
           {#if lineStore.selectedPlatform}
             {lineStore.selectedPlatform.name}
