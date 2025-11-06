@@ -10,7 +10,7 @@ export async function queryOverpassData(query: string): Promise<any> {
   });
 
   if (!response.ok) {
-    throw new Error(`HTTP error! status: ${response.status}`);
+    throw new Error(`Overpass Query HTTP error! status: ${response.status}`);
   }
 
   return response.json();
