@@ -4,12 +4,21 @@ import { queryOverpassData }from './utils.ts';
 
 const query = `
 [out:json][timeout:25];
-relation["type"="route"]["route"="tram"]["network:short"="VMS"];
-out body;
-node(r)["public_transport"="stop_position"] ->.stops;
+relation["type"="route"]["route"="tram"]["network:short"="VMS"] -> .relations;
+(
+  node(r.relations:"stop");
+  node(r.relations:"stop_entry_only");
+  node(r.relations:"stop_exit_only");
+) ->.stops;
+
+way(r.relations) -> .relationWays;
+way(bn.stops) -> .waysContainingStopNode;
+// intersection of ways in the route relations and those containing a stop
+way.relationWays.waysContainingStopNode -> .stopLineSegments;
+
+.relations out body;
 .stops out center;
-way(bn.stops);
-out geom;
+.stopLineSegments out geom;
 `;
 
 interface Node {
@@ -48,7 +57,6 @@ export async function generateStopData(): Promise<FeatureCollection<Point, GeoJs
   }
 
   const stops: Feature<Point>[] = [];
-
 
   for (const node of nodes) {
     const nodeID = node.id;
