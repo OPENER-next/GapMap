@@ -23,82 +23,88 @@
 
 
 <div class="{className} flex flex-col">
-  <header class="p-[1.5rem] border-b">
-    <h1 class="mb-[1rem] text-2xl font-bold flex items-center gap-[0.5em]">
+  <header class="p-[1.5rem]">
+    <h1 class="text-2xl font-bold flex items-center gap-[0.5em]">
       <img alt="" src={logoImage} class="h-[1.3em]">
       <span>GapMap</span>
     </h1>
-    <Select.Root
-      allowDeselect={true}
-      type="single"
-      bind:value={
-        () => lineStore.selectedLineId,
-        (v) => lineStore.selectedLineId = v === '' ? undefined : v
-      }
-    >
-      <Select.Trigger class="w-full">
-        {#if lineStore.selectedLine}
-          {lineStore.selectedLine.name}
-        {:else}
-          Linie auswählen
-        {/if}
-      </Select.Trigger>
-      <Select.Content>
-        {#each lineStore.lines as [id, line]}
-          <Select.Item value={id}>{line.name}</Select.Item>
-        {/each}
-      </Select.Content>
-    </Select.Root>
   </header>
-  <main class="access-assessment-box overflow-scroll flex flex-col px-[1.5rem] py-[1.5rem]">
-    <div class="flex flex-row gap-[2rem] mb-[2rem]">
-      <Select.Root type="single" bind:value={vehicleSelectValue}>
-        <Select.Trigger class="w-full">
-          {#if vehicle}
-            {vehicle.name}
-          {:else}
-            Fahrzeug auswählen
-          {/if}
-        </Select.Trigger>
-        <Select.Content>
-          {#each vehicleData as vehicle, i}
-            <Select.Item value={i.toString()}>{vehicle.name}</Select.Item>
-          {/each}
-        </Select.Content>
-      </Select.Root>
+  <main class="flex-1 min-h-0 flex flex-col">
+    <div
+      class="px-[1.5rem]"
+    >
       <Select.Root
         allowDeselect={true}
-        disabled={!lineStore.isLineSelected}
         type="single"
         bind:value={
-          () => lineStore.selectedPlatformId,
-          (v) => lineStore.selectedPlatformId = v === '' ? undefined : v
+          () => lineStore.selectedLineId,
+          (v) => lineStore.selectedLineId = v === '' ? undefined : v
         }
       >
         <Select.Trigger class="w-full">
-          {#if lineStore.selectedPlatform}
-            {lineStore.selectedPlatform.name}
+          {#if lineStore.selectedLine}
+            {lineStore.selectedLine.name}
           {:else}
-            Haltestelle auswählen
+            Linie auswählen
           {/if}
         </Select.Trigger>
         <Select.Content>
-          {#each lineStore.selectedLine?.stops as platform}
-            <Select.Item value={platform.id}>{platform.name}</Select.Item>
+          {#each lineStore.lines as [id, line]}
+            <Select.Item value={id}>{line.name}</Select.Item>
           {/each}
         </Select.Content>
       </Select.Root>
+      <div class="flex flex-row gap-[1rem] my-[1rem]">
+        <Select.Root type="single" bind:value={vehicleSelectValue}>
+          <Select.Trigger class="w-full">
+            {#if vehicle}
+              {vehicle.name}
+            {:else}
+              Fahrzeug auswählen
+            {/if}
+          </Select.Trigger>
+          <Select.Content>
+            {#each vehicleData as vehicle, i}
+              <Select.Item value={i.toString()}>{vehicle.name}</Select.Item>
+            {/each}
+          </Select.Content>
+        </Select.Root>
+        <Select.Root
+          allowDeselect={true}
+          disabled={!lineStore.isLineSelected}
+          type="single"
+          bind:value={
+            () => lineStore.selectedPlatformId,
+            (v) => lineStore.selectedPlatformId = v === '' ? undefined : v
+          }
+        >
+          <Select.Trigger class="w-full">
+            {#if lineStore.selectedPlatform}
+              {lineStore.selectedPlatform.name}
+            {:else}
+              Haltestelle auswählen
+            {/if}
+          </Select.Trigger>
+          <Select.Content>
+            {#each lineStore.selectedLine?.stops as platform}
+              <Select.Item value={platform.id}>{platform.name}</Select.Item>
+            {/each}
+          </Select.Content>
+        </Select.Root>
+      </div>
     </div>
 
-    {#if lineStore.selectedPlatform && vehicle}
-      <AccessSchematic
-        vehicle={vehicle}
-        platform={lineStore.selectedPlatform}
-        class="flex-1"
-        onNext={_ => lineStore.nextPlatform()}
-        onPrevious={_ => lineStore.previousPlatform()}
-      />
-    {/if}
+    <div class="access-assessment-box flex-1 overflow-scroll p-[1.5rem] border-t">
+      {#if lineStore.selectedPlatform && vehicle}
+        <AccessSchematic
+          vehicle={vehicle}
+          platform={lineStore.selectedPlatform}
+          class=""
+          onNext={_ => lineStore.nextPlatform()}
+          onPrevious={_ => lineStore.previousPlatform()}
+        />
+      {/if}
+    </div>
   </main>
 </div>
 
