@@ -52,7 +52,7 @@
    * @param value
    */
   function conv(value: number): string {
-    return `${value * 35}px`;
+    return `${value * 25}px`;
   }
 </script>
 
