@@ -12,6 +12,10 @@ const config = {
   },
 
 	kit: {
+		paths: {
+			// required for GitHub pages served here: https://opener-next.github.io/GapMap/
+			base: '/GapMap'
+		},
 		adapter: adapter({
 			// default options are shown. On some platforms
 			// these options are set automatically — see below
