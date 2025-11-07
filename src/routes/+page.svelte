@@ -7,5 +7,5 @@
   setContext('line-store', new LineStore());
 </script>
 
-<SidePane class="max-w-md flex-1"/>
+<SidePane class="min-w-0 max-w-md flex-1"/>
 <MapPane class="flex-2 m-[1.5rem] ml-0"/>
