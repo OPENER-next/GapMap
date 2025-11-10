@@ -3,8 +3,7 @@
   import type { Map } from 'maplibre-gl';
   import { getContext } from 'svelte';
   import { GeoJSONSource, GeolocateControl, LineLayer, MapLibre, NavigationControl, Projection, ScaleControl, SymbolLayer } from 'svelte-maplibre-gl';
-  import geoJSONStopData from "virtual:osm-gen/stops";
-  import geoJSONLineData from "virtual:osm-gen/lines";
+  import {geoJSONLineData, geoJSONStopData} from "virtual:osm-data/data";
 
 	let {
     class: className,
@@ -50,7 +49,7 @@
     bind:map
     class="w-full h-full"
     zoom={12}
-    center={{ lng: 12.92361, lat: 50.82492 }}
+    center={{ lng: 8.40219712, lat: 49.003463 }}
     style="https://api.maptiler.com/maps/019909f4-78cf-7dbe-a949-27df4805bb43/style.json?key=3Uam2soS3S9RCPvHdP7E"
     cursor={mapCursor}
     globalState={mapGlobalState}

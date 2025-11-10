@@ -1,4 +1,4 @@
-# OSM Gen
+# OSM Data
 
 Small scripts to query and process exemplary OSM data to feed the demo App.
 
@@ -10,8 +10,7 @@ The data is queried via Overpass and then transformed into 2 GeoJSON data struct
 
 Import it directly in the app's code:
 ```ts
-import geojsonStopData from "virtual:osm-gen/stops";
-import geojsonLineData from "virtual:osm-gen/lines";
+import { geoJSONLineData, geoJSONStopData } from "virtual:osm-data/data";
 ```
 
 Requires changes to the following files:
@@ -21,7 +20,7 @@ Requires changes to the following files:
 {
   "compilerOptions": {
 +   "types": [
-+     "./tools/osm-gen/osm-gen"
++     "./tools/osm-data/osm-data"
 +   ],
   }
 }
@@ -29,11 +28,11 @@ Requires changes to the following files:
 
 `vite.config.ts`
 ```diff
-+import OSMGen from './tools/osm-gen/osm-gen';
++import OSMData from './tools/osm-data/osm-data';
 
 export default defineConfig({
   plugins: [
-+    OSMGen()
++    OSMData()
   ]
 });
 ```
@@ -42,10 +41,10 @@ export default defineConfig({
 
 `lines.geojson`
 ```shell
-node osm-gen-run.ts lines > lines.geojson
+node osm-data-run.ts lines > lines.geojson
 ```
 
 `stops.geojson`
 ```shell
-node osm-gen-run.ts stops > stops.geojson
+node osm-data-run.ts stops > stops.geojson
 ```
