@@ -106,9 +106,9 @@
           "icon-padding": 0
         }}
         paint={{
-          "text-color": "hsl(0, 0%, 0%)",
-          "icon-halo-color": "hsl(0, 0%, 100%)",
-          "text-halo-color": "hsl(0, 0%, 100%)",
+          "text-color": "#000000",
+          "icon-halo-color": "#FFFFFF",
+          "text-halo-color": "#FFFFFF",
           "icon-halo-width": 2,
           "text-halo-width": 2,
           "text-halo-blur": 0,
@@ -119,7 +119,7 @@
               ["global-state", "active"],
               ["get", "_id"]
             ],
-            "blue",
+            "#6e00ff",
             "hsl(26, 100%, 50%)"
           ],
           "icon-halo-blur": 0
@@ -165,7 +165,7 @@
           "line-cap": "round"
         }}
         paint={{
-          "line-color": "hsl(0, 0%, 100%)",
+          "line-color": "#FFFFFF",
           "line-width": [
             "interpolate",
             ["linear"],
@@ -224,7 +224,7 @@
               ["global-state", "active"],
               ["get", "_id"]
             ],
-            "blue",
+            "#6e00ff",
             "hsla(26, 100%, 50%, 0.25)"
           ],
           "line-color-transition": {
