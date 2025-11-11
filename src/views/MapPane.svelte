@@ -16,7 +16,8 @@
   let map: Map | undefined = $state();
   let mapCursor: string | undefined = $state();
   let mapGlobalState = $derived({
-    'active': lineStore.selectedPlatformId ?? lineStore.selectedLineId ?? null
+    'activeLine': lineStore.selectedLineId ?? null,
+    'activeStop': lineStore.selectedPlatformId ?? null,
   });
 
   $effect(() => {
@@ -97,7 +98,7 @@
             "case",
             [
               "==",
-              ["global-state", "active"],
+              ["global-state", "activeStop"],
               ["get", "_id"]
             ],
             0,
@@ -116,7 +117,7 @@
             "case",
             [
               "==",
-              ["global-state", "active"],
+              ["global-state", "activeStop"],
               ["get", "_id"]
             ],
             "#6e00ff",
@@ -135,19 +136,14 @@
             "any",
             [
               "==",
-              ["global-state", "active"],
+              ["global-state", "activeLine"],
               null
             ],
             [
               "in",
-              ["global-state", "active"],
+              ["global-state", "activeLine"],
               ["get", "_relation_ids"]
             ],
-            [
-              "in",
-              "node",
-              ["global-state", "active"]
-            ]
           ],
         ]}
       />
@@ -209,7 +205,7 @@
             "case",
             [
               "==",
-              ["global-state", "active"],
+              ["global-state", "activeLine"],
               ["get", "_id"]
             ],
             1,
@@ -221,7 +217,7 @@
             "case",
             [
               "==",
-              ["global-state", "active"],
+              ["global-state", "activeLine"],
               ["get", "_id"]
             ],
             "#6e00ff",
