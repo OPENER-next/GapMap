@@ -114,23 +114,27 @@ export async function generateData(): Promise<{
     }
   }
 
-
   const lineFeatures = routes.values().map(extractLineFeature).toArray();
   const stopFeatures: Array<Feature<Point>> = [];
 
   for (const stop of stops) {
+    let route: Relation | undefined;
+    let platform: Node | Way | Relation | undefined;
     // find first relation that contains this stop
-    const route = routes.values().find(
-      r => r.members.some(m => m.ref === stop.id),
-    );
-    if (!route) {
+    const it = findRoutesContainingNodeId(stop.id, routes).next();
+    if (it.value !== undefined) {
+      route = it.value[0];
+      const memberIndex = it.value[1];
+      // find related platform by looking at the next element in the relation member list
+      const nextMember = route!.members[memberIndex + 1];
+      if (nextMember && nextMember.role === 'platform') {
+        platform = platforms.values().find(p => p.id === nextMember.ref)
+      }
+    }
+    else {
       throw Error(`No route relation found for the given stop node: ${stop.id}`);
     }
-    // find related platform
-    const platform = platforms.values().find(
-      p => (p.tags.name === stop.tags.name || p.tags['ref:IFOPT'] === stop.tags['ref:IFOPT'])
-            && route.members.some(m => m.ref === p.id),
-    );
+
     stopFeatures.push(extractStopFeature(stop, stops, routeSegments, routes, platform));
   }
 
@@ -248,7 +252,7 @@ function extractStopFeature(stop: Node, stops: Set<Node>, ways: Set<Way>, routes
   // START - Find route relations this stop belongs to
 
   const _relation_ids = findRoutesContainingNodeId(nodeID, routes)
-    .map(r => `relation/${r.id}`)
+    .map(r => `relation/${r[0].id}`)
     .toArray();
 
   const id = `node/${nodeID}`;
@@ -272,12 +276,11 @@ function extractStopFeature(stop: Node, stops: Set<Node>, ways: Set<Way>, routes
   };
 }
 
-
-function* findRoutesContainingNodeId(id: number, relations: Set<Relation>): Generator<Relation> {
+function* findRoutesContainingNodeId(id: number, relations: Set<Relation>): Generator<[Relation, number]> {
   for (const relation of relations) {
-    for (const member of relation.members) {
+    for (const [memberIndex, member] of relation.members.entries()) {
       if (member.type === 'node' && member.ref === id) {
-        yield relation;
+        yield [relation, memberIndex];
       }
     }
   }
