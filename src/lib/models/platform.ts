@@ -4,12 +4,12 @@ export default class Platform {
   readonly id: string;
   readonly name: string;
   readonly coordinates: LngLatLike;
-  readonly boardingHeight: number;
+  readonly boardingHeight?: number;
 
   constructor({
     id, name, coordinates, boardingHeight
   }: {
-    id: string, name: string, coordinates: LngLatLike, boardingHeight: number
+    id: string, name: string, coordinates: LngLatLike, boardingHeight?: number
   }) {
     this.id = id;
     this.name = name;

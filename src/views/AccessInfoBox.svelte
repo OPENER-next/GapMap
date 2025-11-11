@@ -22,7 +22,13 @@
 <dl class="bg-white border-4 border-black p-[1em] rounded-2xl flex-[2_0_9rem]">
   <div class="flex flex-row justify-between">
     <dt class="access-attribute">Spalt</dt>
-    <dd>{mToCm(assessment.verticalGap)}</dd>
+    <dd>
+      {#if assessment.verticalGap !== undefined}
+        {mToCm(assessment.verticalGap)}
+      {:else}
+        Unbekannt
+      {/if}
+    </dd>
   </div>
   {#if assessment.hasSteps}
     <div class="flex flex-row justify-between">

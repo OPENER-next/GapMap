@@ -5,6 +5,7 @@
   import { WheelchairSpace } from "$lib/models/space";
   import AccessInfoBox from "./AccessInfoBox.svelte";
   import MaterialSymbolsAccessibleRounded from '~icons/material-symbols/accessible-rounded';
+  import MaterialSymbolsQuestionMarkRounded from '~icons/material-symbols/question-mark-rounded';
   import MaterialSymbolsCheckRounded from '~icons/material-symbols/check-rounded';
   import MaterialSymbolsRemoveRounded from '~icons/material-symbols/remove-rounded';
   import MaterialSymbolsCloseRounded from '~icons/material-symbols/close-rounded';
@@ -33,6 +34,7 @@
 
   function selectAccessIcon(assessment: AccessSynopsis): Component<SVGAttributes<SVGSVGElement>> {
     switch (assessment) {
+      case AccessSynopsis.unknown: return MaterialSymbolsQuestionMarkRounded;
       case AccessSynopsis.accessible: return MaterialSymbolsCheckRounded;
       case AccessSynopsis.aided: return MaterialSymbolsRemoveRounded;
       case AccessSynopsis.inaccessible: return MaterialSymbolsCloseRounded;
@@ -41,6 +43,7 @@
 
   function selectAccessClass(assessment: AccessSynopsis): string {
     switch (assessment) {
+      case AccessSynopsis.unknown: return 'unknown';
       case AccessSynopsis.accessible: return 'good';
       case AccessSynopsis.aided: return 'limited';
       case AccessSynopsis.inaccessible: return 'bad';
@@ -254,6 +257,12 @@
       border-radius: 50%;
       transform: translate(50%, -50%);
       padding: 0.25rem;
+    }
+
+    &.unknown {
+      .access-icon {
+        background-color: gray;
+      }
     }
 
     &.good {

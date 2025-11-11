@@ -20,7 +20,7 @@ export const lineData = new Map(geoJSONLineData.features.map(l => {
           id: stop.id as string,
           coordinates: stop.geometry.coordinates as [number, number],
           name: stop.properties!.name,
-          boardingHeight: stop.properties?.height ?? 0.3,
+          boardingHeight: stop.properties?.height,
         })
       }),
     })
